@@ -1,11 +1,23 @@
+using Microsoft.EntityFrameworkCore;
+using RestaurantOperations.Api.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Database connection
+var connectionString = builder.Configuration
+    .GetConnectionString("RestaurantOperations")
+    ?? throw new InvalidOperationException(
+        "Database connection string is missing.");
+
+builder.Services.AddDbContext<RestaurantOperationsDbContext>(options =>
+    options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 
