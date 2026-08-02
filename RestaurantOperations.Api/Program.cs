@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RestaurantOperations.Api.Data;
+using RestaurantOperations.Api.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,7 @@ var connectionString = builder.Configuration
 
 builder.Services.AddDbContext<RestaurantOperationsDbContext>(options =>
     options.UseSqlServer(connectionString));
+builder.Services.AddScoped<InventoryCountService>();
 
 var app = builder.Build();
 
