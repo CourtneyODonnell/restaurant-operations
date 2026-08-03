@@ -49,7 +49,6 @@ public class InventoryCountsController : ControllerBase
         CancellationToken cancellationToken)
     {
         var count = await _dbContext.InventoryCounts
-            .AsNoTracking()
             .Include(inventoryCount => inventoryCount.Lines)
             .ThenInclude(line => line.Product)
             .SingleOrDefaultAsync(
@@ -69,6 +68,7 @@ public class InventoryCountsController : ControllerBase
     {
         var count = await _dbContext.InventoryCounts
             .Include(inventoryCount => inventoryCount.Lines)
+            .ThenInclude(line => line.Product)
             .SingleOrDefaultAsync(
                 inventoryCount => inventoryCount.Id == id,
                 cancellationToken);

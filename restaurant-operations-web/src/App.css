@@ -182,3 +182,7 @@
     border-right-color: var(--border);
   }
 }
+.variance-alert {
+    font-weight: 700;
+    color: #b42318;
+}
