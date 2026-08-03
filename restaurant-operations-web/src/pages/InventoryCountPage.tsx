@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
-
+// Import API functions
 import {
     addInventoryLine,
     createInventoryCount,
+    finalizeInventoryCount,
+    getInventoryCount,
     updateInventoryLine,
 } from "../api/inventoryCounts";
+// Import getProducts function
 import { getProducts } from "../api/products";
-
+// Import types
 import type {
     InventoryCount,
     Product,
@@ -166,6 +169,33 @@ export function InventoryCountPage() {
         }
     }
 
+    async function handleFinalize() {
+        if (!count) {
+            return;
+        }
+
+        try {
+            setError(null);
+
+            await finalizeInventoryCount(count.id);
+
+            const refreshedCount = await getInventoryCount(count.id);
+            setCount(refreshedCount);
+
+            setEditingLineId(null);
+            setEditExpectedQuantity("");
+            setEditActualQuantity("");
+            setEditVarianceReason("");
+        } catch (requestError) {
+            setError(
+                requestError instanceof Error
+                    ? requestError.message
+                    : "Could not finalize inventory count.",
+            );
+        }
+    }
+
+
     return (
         <section>
             <div className="section-heading">
@@ -191,7 +221,14 @@ export function InventoryCountPage() {
       <p>
         <strong>Count date:</strong>{" "}
         {new Date(count.countDate).toLocaleString()}
-      </p>
+                            </p>
+                            {count.finalizedAt && (
+                                <p>
+                                    <strong>Finalized:</strong>{" "}
+                                    {new Date(count.finalizedAt).toLocaleString()}
+                                </p>
+                            )}
+
     </div>
                         <div className="card table-wrap">
                             <h3>Count lines</h3>
@@ -199,108 +236,139 @@ export function InventoryCountPage() {
                             {count.lines.length === 0 ? (
                                 <p>No inventory lines have been added yet.</p>
                             ) : (
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Product</th>
-                                            <th>Expected</th>
-                                            <th>Actual</th>
-                                            <th>Variance</th>
-                                            <th>Reason</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-
-                                    <tbody>
-                                        {count.lines.map((line) => (
-                                            <tr key={line.id}>
-                                                <td>{line.productName}</td>
-                                                <td>{line.expectedQuantity}</td>
-                                                <td>{line.actualQuantity}</td>
-                                                <td className={line.variance === 0 ? "" : "variance-alert"}>
-                                                    {line.variance}
-                                                </td>
-                                                <td>{line.varianceReason ?? "—"}</td>
-                                                <td>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Expected</th>
+                                        <th>Actual</th>
+                                        <th>Variance</th>
+                                        <th>Reason</th>
+                                                {count.status === "Draft" && <th>Actions</th>}
+                                    </tr>
+                                </thead>
+                                        {/* table body */}
+                                <tbody>
+                                    {count.lines.map((line) => (
+                                        <tr key={line.id}>
+                                            <td>{line.productName}</td>
+                                            <td>{line.expectedQuantity}</td>
+                                            <td>{line.actualQuantity}</td>
+                                            <td className={line.variance === 0 ? "" : "variance-alert"}>
+                                                {line.variance}
+                                            </td>
+                                            <td>{line.varianceReason ?? "—"}</td>
+                                            <td>
+                                                {count.status === "Draft" && (
                                                     <button
                                                         type="button"
                                                         onClick={() => handleEditLine(line.id)}
                                                     >
                                                         Edit
                                                     </button>
-                                                </td>
-                                            </tr>
-                                        ))}
+                                                )}
+                                            </td>
+                                        </tr>
+                                        
+
+                                    ))}
                                     </tbody>
-                                </table>
-                            )}
+
+                            </table>
+                        )}
                         </div>
-                        <form className="card" onSubmit={handleAddLine}>
+                        {/* finalize button */}
+                        {
+                            count.status === "Draft" && (
+                                <button
+                                    type="button"
+                                    onClick={handleFinalize}
+                                    disabled={count.lines.length === 0}
+                                >
+                                    Finalize count
+                                </button>
+                            )
+                        }
+
+                        {count.status === "Finalized" && (
+                            <div className="card">
+                                <strong>Finalized and locked</strong>
+                                <p>This inventory count can no longer be edited.</p>
+                            </div>
+                        )}
+
+
+                        {count.status === "Draft" && (
+
+                       
+                            <form className="card" onSubmit={handleAddLine}>
                             
-      <h3>Add inventory line</h3>
+                              <h3>Add inventory line</h3>
 
-      <label>
-        Product
-        <select
-          value={selectedProductId}
-          onChange={(event) =>
-            setSelectedProductId(event.target.value)
-          }
-          required
-        >
-          <option value="">Select a product</option>
+                              <label>
+                                Product
+                                <select
+                                  value={selectedProductId}
+                                  onChange={(event) =>
+                                    setSelectedProductId(event.target.value)
+                                  }
+                                  required
+                                >
+                                  <option value="">Select a product</option>
 
-          {products.map((product) => (
-            <option key={product.id} value={product.id}>
-              {product.name} ({product.sku})
-            </option>
-          ))}
-        </select>
-      </label>
+                                  {products.map((product) => (
+                                    <option key={product.id} value={product.id}>
+                                      {product.name} ({product.sku})
+                                    </option>
+                                  ))}
+                                </select>
+                              </label>
 
-      <label>
-        Expected quantity
-        <input
-          type="number"
-          min="0"
-          step="0.01"
-          value={expectedQuantity}
-          onChange={(event) =>
-            setExpectedQuantity(event.target.value)
-          }
-          required
-        />
-      </label>
+                              <label>
+                                Expected quantity
+                                <input
+                                  type="number"
+                                  min="0"
+                                  step="0.01"
+                                  value={expectedQuantity}
+                                  onChange={(event) =>
+                                    setExpectedQuantity(event.target.value)
+                                  }
+                                  required
+                                />
+                              </label>
 
-      <label>
-        Actual quantity
-        <input
-          type="number"
-          min="0"
-          step="0.01"
-          value={actualQuantity}
-          onChange={(event) =>
-            setActualQuantity(event.target.value)
-          }
-          required
-        />
-      </label>
+                              <label>
+                                Actual quantity
+                                <input
+                                  type="number"
+                                  min="0"
+                                  step="0.01"
+                                  value={actualQuantity}
+                                  onChange={(event) =>
+                                    setActualQuantity(event.target.value)
+                                  }
+                                  required
+                                />
+                              </label>
 
-      <label>
-        Variance reason
-        <textarea
-          value={varianceReason}
-          onChange={(event) =>
-            setVarianceReason(event.target.value)
-          }
-          maxLength={500}
-        />
-      </label>
+                              <label>
+                                Variance reason
+                                <textarea
+                                  value={varianceReason}
+                                  onChange={(event) =>
+                                    setVarianceReason(event.target.value)
+                                  }
+                                  maxLength={500}
+                                />
+                              </label>
 
-      <button type="submit">Add line</button>
-                        </form>
+                                <button type="submit">Add line</button>
+                            </form>
+                        )}
+
                         {/* edit form */}
-                        {editingLineId !== null && (
+                        {count.status === "Draft" && editingLineId !== null && (
                             <form className="card" onSubmit={handleSaveEdit}>
                                 <h3>Edit inventory line</h3>
 
