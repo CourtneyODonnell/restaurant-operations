@@ -28,6 +28,9 @@ export function InventoryCountPage() {
     const [varianceReason, setVarianceReason] = useState("");
     //edit state
     const [editingLineId, setEditingLineId] = useState<number | null>(null);
+    const [editExpectedQuantity, setEditExpectedQuantity] = useState("");
+    const [editActualQuantity, setEditActualQuantity] = useState("");
+    const [editVarianceReason, setEditVarianceReason] = useState("");
 
     //useeffect to load products
 
@@ -119,9 +122,9 @@ export function InventoryCountPage() {
         }
 
         setEditingLineId(line.id);
-        setExpectedQuantity(line.expectedQuantity.toString());
-        setActualQuantity(line.actualQuantity.toString());
-        setVarianceReason(line.varianceReason ?? "");
+        setEditExpectedQuantity(line.expectedQuantity.toString());
+        setEditActualQuantity(line.actualQuantity.toString());
+        setEditVarianceReason(line.varianceReason ?? "");
     }
 
     async function handleSaveEdit(
@@ -140,20 +143,20 @@ export function InventoryCountPage() {
                 count.id,
                 editingLineId,
                 {
-                    expectedQuantity: Number(expectedQuantity),
-                    actualQuantity: Number(actualQuantity),
+                    expectedQuantity: Number(editExpectedQuantity),
+                    actualQuantity: Number(editActualQuantity),
                     varianceReason:
-                        varianceReason.trim() === ""
+                        editVarianceReason.trim() === ""
                             ? null
-                            : varianceReason.trim(),
+                            : editVarianceReason.trim(),
                 },
             );
 
             setCount(updatedCount);
             setEditingLineId(null);
-            setExpectedQuantity("");
-            setActualQuantity("");
-            setVarianceReason("");
+            setEditExpectedQuantity("");
+            setEditActualQuantity("");
+            setEditVarianceReason("");
         } catch (requestError) {
             setError(
                 requestError instanceof Error
@@ -204,7 +207,7 @@ export function InventoryCountPage() {
                                             <th>Actual</th>
                                             <th>Variance</th>
                                             <th>Reason</th>
-                                            <th>Action</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
 
@@ -296,7 +299,7 @@ export function InventoryCountPage() {
 
       <button type="submit">Add line</button>
                         </form>
-                        {/* add edit form */}
+                        {/* edit form */}
                         {editingLineId !== null && (
                             <form className="card" onSubmit={handleSaveEdit}>
                                 <h3>Edit inventory line</h3>
@@ -307,9 +310,9 @@ export function InventoryCountPage() {
                                         type="number"
                                         min="0"
                                         step="0.01"
-                                        value={expectedQuantity}
+                                        value={editExpectedQuantity}
                                         onChange={(event) =>
-                                            setExpectedQuantity(event.target.value)
+                                            setEditExpectedQuantity(event.target.value)
                                         }
                                         required
                                     />
@@ -321,9 +324,9 @@ export function InventoryCountPage() {
                                         type="number"
                                         min="0"
                                         step="0.01"
-                                        value={actualQuantity}
+                                        value={editActualQuantity}
                                         onChange={(event) =>
-                                            setActualQuantity(event.target.value)
+                                            setEditActualQuantity(event.target.value)
                                         }
                                         required
                                     />
@@ -332,9 +335,9 @@ export function InventoryCountPage() {
                                 <label>
                                     Variance reason
                                     <textarea
-                                        value={varianceReason}
+                                        value={editVarianceReason}
                                         onChange={(event) =>
-                                            setVarianceReason(event.target.value)
+                                            setEditVarianceReason(event.target.value)
                                         }
                                         maxLength={500}
                                     />
@@ -346,9 +349,9 @@ export function InventoryCountPage() {
                                     type="button"
                                     onClick={() => {
                                         setEditingLineId(null);
-                                        setExpectedQuantity("");
-                                        setActualQuantity("");
-                                        setVarianceReason("");
+                                        setEditExpectedQuantity("");
+                                        setEditActualQuantity("");
+                                        setEditVarianceReason("");
                                     }}
                                 >
                                     Cancel
@@ -356,7 +359,7 @@ export function InventoryCountPage() {
                             </form>
                         )}
 
-
+                        
 
 
                 </>
