@@ -295,7 +295,70 @@ export function InventoryCountPage() {
       </label>
 
       <button type="submit">Add line</button>
-    </form>
+                        </form>
+                        //add edit form
+                        {editingLineId !== null && (
+                            <form className="card" onSubmit={handleSaveEdit}>
+                                <h3>Edit inventory line</h3>
+
+                                <label>
+                                    Expected quantity
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        value={expectedQuantity}
+                                        onChange={(event) =>
+                                            setExpectedQuantity(event.target.value)
+                                        }
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Actual quantity
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        value={actualQuantity}
+                                        onChange={(event) =>
+                                            setActualQuantity(event.target.value)
+                                        }
+                                        required
+                                    />
+                                </label>
+
+                                <label>
+                                    Variance reason
+                                    <textarea
+                                        value={varianceReason}
+                                        onChange={(event) =>
+                                            setVarianceReason(event.target.value)
+                                        }
+                                        maxLength={500}
+                                    />
+                                </label>
+
+                                <button type="submit">Save changes</button>
+
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setEditingLineId(null);
+                                        setExpectedQuantity("");
+                                        setActualQuantity("");
+                                        setVarianceReason("");
+                                    }}
+                                >
+                                    Cancel
+                                </button>
+                            </form>
+                        )}
+
+
+
+
                 </>
             )}
             {error && <div className="error-banner">{error}</div>}
