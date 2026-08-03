@@ -257,7 +257,7 @@ export function InventoryCountPage() {
                         }
 
                         {count.status === "Finalized" && (
-                            <div className="card">
+                            <div className="card locked-message">
                                 <strong>Finalized and locked</strong>
                                 <p>This inventory count can no longer be edited.</p>
                             </div>
