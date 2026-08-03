@@ -4,6 +4,7 @@ import type { FormEvent } from "react";
 import {
     addInventoryLine,
     createInventoryCount,
+    updateInventoryLine,
 } from "../api/inventoryCounts";
 import { getProducts } from "../api/products";
 
@@ -25,6 +26,8 @@ export function InventoryCountPage() {
     const [expectedQuantity, setExpectedQuantity] = useState("");
     const [actualQuantity, setActualQuantity] = useState("");
     const [varianceReason, setVarianceReason] = useState("");
+    //edit state
+    const [editingLineId, setEditingLineId] = useState<number | null>(null);
 
     //useeffect to load products
 
@@ -104,7 +107,62 @@ export function InventoryCountPage() {
         }
     }
 
-    
+    function handleEditLine(lineId: number) {
+        if (!count) {
+            return;
+        }
+
+        const line = count.lines.find((item) => item.id === lineId);
+
+        if (!line) {
+            return;
+        }
+
+        setEditingLineId(line.id);
+        setExpectedQuantity(line.expectedQuantity.toString());
+        setActualQuantity(line.actualQuantity.toString());
+        setVarianceReason(line.varianceReason ?? "");
+    }
+
+    async function handleSaveEdit(
+        event: FormEvent<HTMLFormElement>,
+    ) {
+        event.preventDefault();
+
+        if (!count || editingLineId === null) {
+            return;
+        }
+
+        try {
+            setError(null);
+
+            const updatedCount = await updateInventoryLine(
+                count.id,
+                editingLineId,
+                {
+                    expectedQuantity: Number(expectedQuantity),
+                    actualQuantity: Number(actualQuantity),
+                    varianceReason:
+                        varianceReason.trim() === ""
+                            ? null
+                            : varianceReason.trim(),
+                },
+            );
+
+            setCount(updatedCount);
+            setEditingLineId(null);
+            setExpectedQuantity("");
+            setActualQuantity("");
+            setVarianceReason("");
+        } catch (requestError) {
+            setError(
+                requestError instanceof Error
+                    ? requestError.message
+                    : "Could not update inventory line.",
+            );
+        }
+    }
+
     return (
         <section>
             <div className="section-heading">
@@ -147,7 +205,8 @@ export function InventoryCountPage() {
                                                 <th>Expected</th>
                                                 <th>Actual</th>
                                                 <th>Variance</th>
-                                                <th>Reason</th>
+                                                    <th>Reason</th>
+                                                    <th>Action</th>
                                             </tr>
                                         </thead>
 
@@ -161,6 +220,14 @@ export function InventoryCountPage() {
                                                         {line.variance}
                                                     </td>
                                                     <td>{line.varianceReason ?? "—"}</td>
+                                                    <td>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleEditLine(line.id)}
+                                                        >
+                                                            Edit
+                                                        </button>
+                                                    </td>
                                                 </tr>
                                             ))}
                                         </tbody>
