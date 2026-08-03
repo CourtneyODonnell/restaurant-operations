@@ -190,50 +190,50 @@ export function InventoryCountPage() {
         {new Date(count.countDate).toLocaleString()}
       </p>
     </div>
+                        <div className="card table-wrap">
+                            <h3>Count lines</h3>
 
-                        <form className="card" onSubmit={handleAddLine}>
-                            <div className="card table-wrap">
-                                <h3>Count lines</h3>
+                            {count.lines.length === 0 ? (
+                                <p>No inventory lines have been added yet.</p>
+                            ) : (
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Expected</th>
+                                            <th>Actual</th>
+                                            <th>Variance</th>
+                                            <th>Reason</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
 
-                                {count.lines.length === 0 ? (
-                                    <p>No inventory lines have been added yet.</p>
-                                ) : (
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Product</th>
-                                                <th>Expected</th>
-                                                <th>Actual</th>
-                                                <th>Variance</th>
-                                                    <th>Reason</th>
-                                                    <th>Action</th>
+                                    <tbody>
+                                        {count.lines.map((line) => (
+                                            <tr key={line.id}>
+                                                <td>{line.productName}</td>
+                                                <td>{line.expectedQuantity}</td>
+                                                <td>{line.actualQuantity}</td>
+                                                <td className={line.variance === 0 ? "" : "variance-alert"}>
+                                                    {line.variance}
+                                                </td>
+                                                <td>{line.varianceReason ?? "—"}</td>
+                                                <td>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleEditLine(line.id)}
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                </td>
                                             </tr>
-                                        </thead>
-
-                                        <tbody>
-                                            {count.lines.map((line) => (
-                                                <tr key={line.id}>
-                                                    <td>{line.productName}</td>
-                                                    <td>{line.expectedQuantity}</td>
-                                                    <td>{line.actualQuantity}</td>
-                                                    <td className={line.variance === 0 ? "" : "variance-alert"}>
-                                                        {line.variance}
-                                                    </td>
-                                                    <td>{line.varianceReason ?? "—"}</td>
-                                                    <td>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => handleEditLine(line.id)}
-                                                        >
-                                                            Edit
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                )}
-                            </div>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+                        <form className="card" onSubmit={handleAddLine}>
+                            
       <h3>Add inventory line</h3>
 
       <label>
@@ -296,7 +296,7 @@ export function InventoryCountPage() {
 
       <button type="submit">Add line</button>
                         </form>
-                        //add edit form
+                        {/* add edit form */}
                         {editingLineId !== null && (
                             <form className="card" onSubmit={handleSaveEdit}>
                                 <h3>Edit inventory line</h3>
