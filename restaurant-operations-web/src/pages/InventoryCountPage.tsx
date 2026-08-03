@@ -17,6 +17,14 @@ import type {
 } from "../types/api";
 
 
+//refactored component imports
+
+import { ErrorBanner } from "../components/ErrorBanner";
+import { StatusBadge } from "../components/StatusBadge";
+import { StartInventoryCount } from "../components/StartInventoryCount";
+import { InventoryLineTable } from "../components/InventoryLineTable";
+import { InventoryLineForm } from "../components/InventoryLineForm";
+
 export function InventoryCountPage() {
 
     //State variables
@@ -206,17 +214,15 @@ export function InventoryCountPage() {
             </div>
 
             {!count ? (
-                <button type="button" onClick={handleCreateCount}>
-                    Start count
-                </button>
-) : (
-  <>
+                <StartInventoryCount onStart={handleCreateCount} />
+            ) : (
+                <>
     <div className="card">
       <p>
         <strong>Count ID:</strong> {count.id}
       </p>
       <p>
-        <strong>Status:</strong> {count.status}
+        <strong>Status:</strong> <StatusBadge status={count.status} />
       </p>
       <p>
         <strong>Count date:</strong>{" "}
@@ -229,54 +235,14 @@ export function InventoryCountPage() {
                                 </p>
                             )}
 
-    </div>
-                        <div className="card table-wrap">
-                            <h3>Count lines</h3>
-
-                            {count.lines.length === 0 ? (
-                                <p>No inventory lines have been added yet.</p>
-                            ) : (
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Product</th>
-                                        <th>Expected</th>
-                                        <th>Actual</th>
-                                        <th>Variance</th>
-                                        <th>Reason</th>
-                                                {count.status === "Draft" && <th>Actions</th>}
-                                    </tr>
-                                </thead>
-                                        {/* table body */}
-                                <tbody>
-                                    {count.lines.map((line) => (
-                                        <tr key={line.id}>
-                                            <td>{line.productName}</td>
-                                            <td>{line.expectedQuantity}</td>
-                                            <td>{line.actualQuantity}</td>
-                                            <td className={line.variance === 0 ? "" : "variance-alert"}>
-                                                {line.variance}
-                                            </td>
-                                            <td>{line.varianceReason ?? "—"}</td>
-                                            <td>
-                                                {count.status === "Draft" && (
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleEditLine(line.id)}
-                                                    >
-                                                        Edit
-                                                    </button>
-                                                )}
-                                            </td>
-                                        </tr>
-                                        
-
-                                    ))}
-                                    </tbody>
-
-                            </table>
-                        )}
                         </div>
+
+                        <InventoryLineTable
+                            lines={count.lines}
+                            isDraft={count.status === "Draft"}
+                            onEdit={handleEditLine}
+                        />
+
                         {/* finalize button */}
                         {
                             count.status === "Draft" && (
@@ -299,72 +265,18 @@ export function InventoryCountPage() {
 
 
                         {count.status === "Draft" && (
-
-                       
-                            <form className="card" onSubmit={handleAddLine}>
-                            
-                              <h3>Add inventory line</h3>
-
-                              <label>
-                                Product
-                                <select
-                                  value={selectedProductId}
-                                  onChange={(event) =>
-                                    setSelectedProductId(event.target.value)
-                                  }
-                                  required
-                                >
-                                  <option value="">Select a product</option>
-
-                                  {products.map((product) => (
-                                    <option key={product.id} value={product.id}>
-                                      {product.name} ({product.sku})
-                                    </option>
-                                  ))}
-                                </select>
-                              </label>
-
-                              <label>
-                                Expected quantity
-                                <input
-                                  type="number"
-                                  min="0"
-                                  step="0.01"
-                                  value={expectedQuantity}
-                                  onChange={(event) =>
-                                    setExpectedQuantity(event.target.value)
-                                  }
-                                  required
-                                />
-                              </label>
-
-                              <label>
-                                Actual quantity
-                                <input
-                                  type="number"
-                                  min="0"
-                                  step="0.01"
-                                  value={actualQuantity}
-                                  onChange={(event) =>
-                                    setActualQuantity(event.target.value)
-                                  }
-                                  required
-                                />
-                              </label>
-
-                              <label>
-                                Variance reason
-                                <textarea
-                                  value={varianceReason}
-                                  onChange={(event) =>
-                                    setVarianceReason(event.target.value)
-                                  }
-                                  maxLength={500}
-                                />
-                              </label>
-
-                                <button type="submit">Add line</button>
-                            </form>
+                            <InventoryLineForm
+                                products={products}
+                                selectedProductId={selectedProductId}
+                                expectedQuantity={expectedQuantity}
+                                actualQuantity={actualQuantity}
+                                varianceReason={varianceReason}
+                                onSelectedProductIdChange={setSelectedProductId}
+                                onExpectedQuantityChange={setExpectedQuantity}
+                                onActualQuantityChange={setActualQuantity}
+                                onVarianceReasonChange={setVarianceReason}
+                                onSubmit={handleAddLine}
+                            />
                         )}
 
                         {/* edit form */}
@@ -432,7 +344,7 @@ export function InventoryCountPage() {
 
                 </>
             )}
-            {error && <div className="error-banner">{error}</div>}
+            {error && <ErrorBanner message={error} />}
         </section>
     );
 }

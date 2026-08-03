@@ -186,3 +186,20 @@
     font-weight: 700;
     color: #b42318;
 }
+
+.status-badge {
+    display: inline-block;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+    .status-badge.draft {
+        background: #fff3cd;
+        color: #856404;
+    }
+
+    .status-badge.finalized {
+        background: #d4edda;
+        color: #155724;
+    }

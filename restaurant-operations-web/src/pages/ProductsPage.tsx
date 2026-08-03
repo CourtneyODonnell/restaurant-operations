@@ -1,8 +1,14 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 // src/pages/ProductsPage.tsx
 import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { createProduct, getProducts } from "../api/products";
 import type { Product } from "../types/api";
+
+//refactored components imports
+import { ErrorBanner } from "../components/ErrorBanner";
+import { ProductTable } from "../components/ProductTable";
+import { ProductForm } from "../components/ProductForm";
 
 export function ProductsPage() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -13,10 +19,14 @@ export function ProductsPage() {
 
     async function loadProducts() {
         try {
-            setError(null);
-            setProducts(await getProducts());
+            const loadedProducts = await getProducts();
+            setProducts(loadedProducts);
         } catch (requestError) {
-            setError(requestError instanceof Error ? requestError.message : "Request failed.");
+            setError(
+                requestError instanceof Error
+                    ? requestError.message
+                    : "Request failed.",
+            );
         } finally {
             setLoading(false);
         }
@@ -49,36 +59,21 @@ export function ProductsPage() {
                 </div>
             </div>
 
-            <form className="card form-grid" onSubmit={handleSubmit}>
-                <label>
-                    Product name
-                    <input value={name} onChange={(event) => setName(event.target.value)} required maxLength={200} />
-                </label>
-                <label>
-                    SKU
-                    <input value={sku} onChange={(event) => setSku(event.target.value)} required maxLength={50} />
-                </label>
-                <button type="submit">Add product</button>
-            </form>
-
-            {error && <div className="error-banner">{error}</div>}
+            <ProductForm
+                name={name}
+                sku={sku}
+                onNameChange={setName}
+                onSkuChange={setSku}
+                onSubmit={handleSubmit}
+            />
+            
+            {error && <ErrorBanner message={error} />}
             {loading ? (
                 <p>Loading products…</p>
             ) : (
-                <div className="card table-wrap">
-                    <table>
-                        <thead><tr><th>Name</th><th>SKU</th><th>Status</th></tr></thead>
-                        <tbody>
-                            {products.map((product) => (
-                                <tr key={product.id}>
-                                    <td>{product.name}</td>
-                                    <td>{product.sku}</td>
-                                    <td>{product.isActive ? "Active" : "Inactive"}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <ProductTable products={products} />
+      
+                
             )}
         </section>
     );
