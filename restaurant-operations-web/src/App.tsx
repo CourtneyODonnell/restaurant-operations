@@ -2,8 +2,9 @@ import { useState } from "react";
 import "./App.css";
 import { InventoryCountPage } from "./pages/InventoryCountPage";
 import { ProductsPage } from "./pages/ProductsPage";
+import { TapeCalculatorPage } from "./pages/TapeCalculatorPage";
 
-type ActivePage = "products" | "inventory";
+type ActivePage = "products" | "inventory" | "calculator";
 
 export default function App() {
     const [activePage, setActivePage] = useState<ActivePage>("products");
@@ -36,11 +37,19 @@ export default function App() {
                     </button>
                 </nav>
 
-                {activePage === "products" ? (
-                    <ProductsPage />
-                ) : (
-                    <InventoryCountPage />
-                )}
+                <button
+                    type="button"
+                    className={activePage === "calculator" ? "active" : ""}
+                    onClick={() => setActivePage("calculator")}
+                >
+                    Tape Calculator
+                </button>
+
+                {activePage === "products" && <ProductsPage />}
+
+                {activePage === "inventory" && <InventoryCountPage />}
+
+                {activePage === "calculator" && <TapeCalculatorPage />}
             </main>
         </div>
     );
