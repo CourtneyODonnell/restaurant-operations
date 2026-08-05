@@ -42,6 +42,19 @@ public class InventoryCountsController : ControllerBase
             new { id = count.Id },
             Map(count));
     }
+    [HttpGet]
+    public async Task<ActionResult<List<InventoryCountResponse>>> GetAll(
+    CancellationToken cancellationToken)
+    {
+        var counts = await _dbContext.InventoryCounts
+            .AsNoTracking()
+            .Include(inventoryCount => inventoryCount.Lines)
+            .ThenInclude(line => line.Product)
+            .OrderByDescending(inventoryCount => inventoryCount.CountDate)
+            .ToListAsync(cancellationToken);
+
+        return Ok(counts.Select(Map).ToList());
+    }
 
     [HttpGet("{id:int}")]
     public async Task<ActionResult<InventoryCountResponse>> GetById(
