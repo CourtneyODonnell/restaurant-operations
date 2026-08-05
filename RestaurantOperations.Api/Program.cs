@@ -27,9 +27,11 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("Frontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
-            .AllowAnyHeader()
-            .AllowAnyMethod();
+        policy.WithOrigins(
+        "http://localhost:5173",
+        "http://localhost:5174")
+    .AllowAnyHeader()
+    .AllowAnyMethod();
     });
 });
 
@@ -42,9 +44,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseRouting();
 
 app.UseCors("Frontend");
+
+// Keep local Flutter Web development on HTTP.
+// Production should still redirect to HTTPS.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthorization();
 
