@@ -1,74 +1,94 @@
 # Hi, I'm Courtney O'Donnell 👋
 
-I'm a .NET developer passionate about building modern, full-stack applications using the Microsoft ecosystem.
+I'm a full-stack .NET developer with a passion for building modern applications using the Microsoft ecosystem. I enjoy creating clean APIs, intuitive user interfaces, and cross-platform solutions that solve real business problems.
 
-Currently I'm focused on:
+**Current focus:** ASP.NET Core • C# • React • TypeScript • Flutter • SQL Server • Entity Framework Core
+
+---
+
+# 🍽 Featured Project — Restaurant Operations
+
+A full-stack restaurant inventory management platform built with **ASP.NET Core 8**, **Entity Framework Core**, **SQL Server**, **React**, and **Flutter**.
+
+The platform demonstrates how multiple client applications can share a single backend while keeping business rules centralized in the API.
+
+## Tech Stack
 
 - ASP.NET Core 8
-- C#
 - Entity Framework Core
 - SQL Server
-- React + TypeScript
-- Flutter
+- React + TypeScript + Vite
+- Flutter + Dart
 - REST APIs
 
 ---
 
-## Featured Project
+# 🎥 Product Management
 
-# 🍽 Restaurant Operations
+> Create and manage products from the React administrative portal.
 
-A full-stack restaurant inventory management platform demonstrating a shared backend architecture across web and mobile clients.
+<p align="center">
+  <img src="restaurant-operations-web/assets/gifs/products.gif" width="900">
+</p>
 
-### Tech Stack
+---
 
-- ASP.NET Core 8
-- Entity Framework Core
-- SQL Server
-- React + TypeScript
-- Flutter
-- REST APIs
+# 🎥 Inventory Workflow
 
-### Repositories
+> Start an inventory count, add products, and review count history.
+
+<p align="center">
+  <img src="restaurant-operations-web/assets/gifs/inventory.gif" width="900">
+</p>
+
+---
+
+# 📱 Mobile Companion
+
+The Flutter application connects to the same ASP.NET Core API, allowing inventory tasks to be completed from a mobile device while sharing the same business rules and data.
+
+<p align="center">
+  <img src="restaurant-operations-mobile/assets/gifs/mobile_demo.gif" width="350">
+</p>
+
+---
+
+# 📂 Repositories
 
 ### 🌐 Restaurant Operations
 
-https://github.com/CourtneyODonnell/restaurant-operations
-
-Includes:
+Full solution including:
 
 - ASP.NET Core Web API
-- React Admin Portal
+- React Administrative Portal
+- Entity Framework Core
 - SQL Server
 - xUnit Tests
+
+➡️ **Repository:**  
+https://github.com/CourtneyODonnell/restaurant-operations
 
 ---
 
 ### 📱 Restaurant Operations Mobile
 
+Flutter client consuming the shared backend API.
+
+➡️ **Repository:**  
 https://github.com/CourtneyODonnell/restaurant-operations-mobile
 
-Includes:
+---
 
-- Flutter
-- Dart
-- Android
-- Shared API integration
+# 🚀 Currently Learning
+
+- Advanced ASP.NET Core
+- Azure deployment
+- Docker
+- CI/CD with GitHub Actions
+- Clean Architecture
 
 ---
 
-## Current Focus
-
-- Full-stack .NET development
-- REST API architecture
-- Cross-platform applications
-- Clean architecture
-- UI/UX improvements
-- Automated testing
-
----
-
-## Connect
+# 📫 Connect
 
 - GitHub: https://github.com/CourtneyODonnell
-- LinkedIn: *(add your LinkedIn URL here)*
