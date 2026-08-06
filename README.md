@@ -1,64 +1,74 @@
-# Restaurant Operations Web
+# Hi, I'm Courtney O'Donnell 👋
 
-> A modern React administrative portal for managing restaurant inventory, products, and daily operations. Built with **React**, **TypeScript**, and **Vite**, consuming a shared ASP.NET Core Web API.
+I'm a .NET developer passionate about building modern, full-stack applications using the Microsoft ecosystem.
 
----
+Currently I'm focused on:
 
-# Demo
-
-## Full Application
-
-<img src="assets/gifs/web_demo.gif" alt="Restaurant Operations Web Demo" width="900"/>
-
----
-
-# Feature Walkthroughs
-
-## Product Management
-
-<img src="assets/gifs/products.gif" alt="Products Demo" width="900"/>
-
-Create and manage restaurant products from a centralized catalog.
+- ASP.NET Core 8
+- C#
+- Entity Framework Core
+- SQL Server
+- React + TypeScript
+- Flutter
+- REST APIs
 
 ---
 
-## Inventory Counts
+## Featured Project
 
-<img src="assets/gifs/inventory.gif" alt="Inventory Workflow Demo" width="900"/>
+# 🍽 Restaurant Operations
 
-Create inventory counts, add inventory lines, edit quantities, and finalize completed counts.
+A full-stack restaurant inventory management platform demonstrating a shared backend architecture across web and mobile clients.
+
+### Tech Stack
+
+- ASP.NET Core 8
+- Entity Framework Core
+- SQL Server
+- React + TypeScript
+- Flutter
+- REST APIs
+
+### Repositories
+
+### 🌐 Restaurant Operations
+
+https://github.com/CourtneyODonnell/restaurant-operations
+
+Includes:
+
+- ASP.NET Core Web API
+- React Admin Portal
+- SQL Server
+- xUnit Tests
 
 ---
 
-## Tape Calculator
+### 📱 Restaurant Operations Mobile
 
-<img src="assets/gifs/tape.gif" alt="Tape Calculator Demo" width="900"/>
+https://github.com/CourtneyODonnell/restaurant-operations-mobile
 
-A utility for quickly balancing register tapes.
+Includes:
 
----
-
-# Screenshots
-
-## Products
-
-![Products](assets/images/products.png)
+- Flutter
+- Dart
+- Android
+- Shared API integration
 
 ---
 
-## Inventory Counts
+## Current Focus
 
-![Inventory Counts](assets/images/inventorycounts.png)
+- Full-stack .NET development
+- REST API architecture
+- Cross-platform applications
+- Clean architecture
+- UI/UX improvements
+- Automated testing
 
 ---
 
-## Tape Calculator
+## Connect
 
-![Tape Calculator](assets/images/tapecalculator.png)
-
-## Related Projects
-
-This application is part of the Restaurant Operations platform.
-
-- **ASP.NET Core API:** https://github.com/CourtneyODonnell/restaurant-operations-api
-- **Flutter Mobile Client:** https://github.com/CourtneyODonnell/restaurant-operations-mobile
+- GitHub: https://github.com/CourtneyODonnell
+- LinkedIn: *(add your LinkedIn URL here)*
