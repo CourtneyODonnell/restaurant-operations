@@ -7,7 +7,9 @@ export function createInventoryCount(countDate: string): Promise<InventoryCount>
         body: JSON.stringify({ countDate }),
     });
 }
-
+export function getInventoryCounts(): Promise<InventoryCount[]> {
+    return apiRequest<InventoryCount[]>("/api/inventory-counts");
+}
 export function getInventoryCount(id: number): Promise<InventoryCount> {
     return apiRequest<InventoryCount>(`/api/inventory-counts/${id}`);
 }

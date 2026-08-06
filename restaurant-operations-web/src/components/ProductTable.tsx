@@ -23,15 +23,27 @@ export function ProductTable({
                 </thead>
 
                 <tbody>
-                    {products.map((product) => (
-                        <tr key={product.id}>
-                            <td>{product.name}</td>
-                            <td>{product.sku}</td>
-                            <td>
-                                {product.isActive ? "Active" : "Inactive"}
-                            </td>
-                        </tr>
-                    ))}
+                    {products.map((product) => {
+                        const status = product.isActive
+                            ? "active"
+                            : "inactive";
+
+                        return (
+                            <tr key={product.id}>
+                                <td>{product.name}</td>
+                                <td>{product.sku}</td>
+                                <td>
+                                    <span
+                                        className={`status-badge ${status}`}
+                                    >
+                                        {product.isActive
+                                            ? "Active"
+                                            : "Inactive"}
+                                    </span>
+                                </td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
         </div>
